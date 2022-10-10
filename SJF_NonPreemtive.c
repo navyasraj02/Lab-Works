@@ -75,7 +75,7 @@ void wt(int n)
 
 void main()
 {
-    int n, i;
+    int n, i, j;
     printf("Enter no of processes :");
     scanf("%d", &n);
     printf("Enter AT Bt\n");
@@ -91,4 +91,5 @@ void main()
     printf("No\tAT\tBt\tWT\tTAT\n");
     for (i = 0; i < n; i++)
         printf("%d\t%d\t%d\t%d\t%d\n", p[i].no, p[i].at, p[i].bt, p[i].wt, p[i].tat);
+    printf("\n");
 }

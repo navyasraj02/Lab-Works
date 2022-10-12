@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <unistd.h>
-
+#include <sys/types.h>
 void main()
 {
-    int pid;
+    pid_t pid;
     pid = fork();
     if (pid == 0)
     {

@@ -61,7 +61,7 @@ void main()
     if (flag1 == 1)
     {
         printf("Following is the SAFE seq\n");
-        for (i = 0; i < n; i++)
+        for (i = 0; i < n - 1; i++)
         {
             printf(" P%d->", ans[i]);
         }

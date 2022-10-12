@@ -1,7 +1,7 @@
 #include <stdio.h>
 typedef struct
 {
-    int no, bt, at, tat, wt, pt;
+    int no, bt, at, tat, wt, pt, ct;
 } process;
 process p[10];
 
@@ -32,6 +32,7 @@ void main()
         if (p[sp].bt == 0)
         {
             count++;
+            p[sp].ct = t + 1;
             p[sp].tat = (t + 1) - p[sp].at;
             p[sp].wt = p[sp].tat - temp[sp];
         }

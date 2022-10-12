@@ -41,7 +41,7 @@ void sjf(int n)
                     p[j] = temp;
                 }
             }
-            flag = 1;
+            flag = 1; // To indicate that there are processes that arrived till current ct(ready var)
         }
         if (flag == 1)
         {

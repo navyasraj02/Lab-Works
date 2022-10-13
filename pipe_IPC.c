@@ -1,9 +1,9 @@
-[1 / 1] pipe.c #include<stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-    void main()
+void main()
 {
     int fd[2], n, status;
     char buffer[100];

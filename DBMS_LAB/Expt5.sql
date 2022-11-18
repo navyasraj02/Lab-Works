@@ -36,11 +36,11 @@ insert into book values(2001,'Automata and Computability','Springer',1999,'2019-
 (2002,'Automata and Computability','Springer',1999,'2019-11-01','issued'),
 (2003,'Automata and Computability','Springer',1999,'2019-11-01','issued'),
 (2004,'Automata and Computability','Springer',1999,'2019-11-01','issued'),
-(2005,'Automata and Computability','Springer',1999,'2019-11-01','present in the library'),
+(2005,'Automata and Computability','Springer',1999,'2019-11-01','issued'),
 
 (2006,'Computer Networks','Prentice Hall India',2011,'2020-05-17','issued'),
 (2007,'Computer Networks','Prentice Hall India',2011,'2020-05-17','issued'),
-(2008,'Computer Networks','Prentice Hall India',2011,'2020-05-17','issued'),
+(2008,'Computer Networks','Prentice Hall India',2011,'2020-05-17','present in the library'),
 (2009,'Computer Networks','Prentice Hall India',2011,'2020-05-17','present in the library'),
 
 (2010,'System Software','Pearson Education Asia',2004,'2019-09-23','issued'),
@@ -48,7 +48,9 @@ insert into book values(2001,'Automata and Computability','Springer',1999,'2019-
 (2012,'System Software','Pearson Education Asia',2004,'2019-09-23','present in the library'),
 
 (2013,'Advanced Microprocessors and Peripherals','McGraw Hill',2013,'2022-01-01','issued'),
-(2014,'Advanced Microprocessors and Peripherals','McGraw Hill',2013,'2022-01-01','present in the library');
+(2014,'Advanced Microprocessors and Peripherals','McGraw Hill',2013,'2022-01-01','present in the library'),
+
+(2015,'Computer Hardware','McGraw Hill',2010,'2022-01-19','present in the library');
 
 insert into lib_member values(14101,'Navya',3,3),
 (14102,'Nayana',2,3),
@@ -69,29 +71,30 @@ insert into books_issue values(2001,14101,'2022-10-17'),
 
 (2004,14104,'2022-09-11'),
 
-(2008,14105,'2022-10-29');
+(2005,14105,'2022-10-29');
 
 CREATE VIEW temp5 AS
 SELECT *
 FROM (book NATURAL JOIN lib_member) NATURAL JOIN books_issue;
 
+\! echo '------------Temp view-------------'
 SELECT *
 FROM temp5;
 
 
-/*Query 1*/
+\! echo '------------Query 1-------------'
 SELECT member_id,name,acc_no,title AS book_title,issue_date
 FROM temp5 
 WHERE CURDATE() >= DATE_ADD(issue_date,INTERVAL 15 DAY);
 
 
-/*Query 2*/
+\! echo '------------Query 2-------------'
 SELECT DISTINCT member_id,name,no_of_books_issued
 FROM temp5 
 WHERE no_of_books_issued=max_limit;
 
 
-/*Query 3*/
+\! echo '------------Query 3-------------'
 (SELECT /*acc_no,title,publisher,year,purch_date,*/title,count(*) as no_of_copies_issued
 FROM temp5
 WHERE status='issued'
@@ -109,7 +112,26 @@ LIMIT 1
 );
 
 
-/**/
+\! echo '------------Temp-------------'
+CREATE VIEW temp_cnt AS
+SELECT title,publisher,count(*) as cnt
+FROM temp5
+WHERE status ='issued'
+GROUP BY title,publisher;
+
+
+\! echo '------------Query 4-------------'
+(SELECT title,publisher
+FROM temp_cnt
+WHERE cnt=(    SELECT count(member_id)
+		FROM lib_member))
+UNION 
+(SELECT title,publisher
+FROM book
+WHERE (title,publisher) NOT IN (SELECT title,publisher
+					FROM temp_cnt));
+
+
 DROP table books_issue;
 DROP table lib_member;
 DROP table book;

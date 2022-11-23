@@ -2,27 +2,10 @@
 #include<string.h>
 #include<stdlib.h>
 
-char *ConvertToHex(int x){
-	int q=x;
-	int r,j=0;
-	char *hex;
-	hex=(char *)malloc((100)*1);
-	while(q!=0){
-		r=q%16;
-		if(r<10)
-			hex[j++]=48+r;
-		else
-			hex[j++]=55+r;
-		q=q/16;
-	}
-	return (char *)hex;
-}
-
 void main(){
 	FILE *f1,*f2,*f3,*f4;
-	int locctr=0x0,start_add,flag=0;
-	char *locs;
-	char label[7],opcode[7],oprnd[7],code[7],mnemonic[7];
+	int i,locctr=0x0,start_add,flag=0;
+	char label[7],opcode[7],oprnd[7],code[7],mnemonic[7],ad[7];
 	f1=fopen("input.txt","r");
 	f2=fopen("optab.txt","r");
 	f3=fopen("symtab.txt","w");
@@ -31,6 +14,9 @@ void main(){
 	if(strcmp(opcode,"START")==0){
 		start_add=strtol(oprnd,NULL,16);
 		locctr=(0x1)*start_add;
+		int len=sizeof(oprnd)/sizeof(oprnd[0]);
+		for( i=0;i<len;i++)
+			ad[i]=oprnd[i];
 		fprintf(f4,"\t%s\t%s\t%s\n",label,opcode,oprnd);
 		fscanf(f1,"%s\t%s\t%s",label,opcode,oprnd);
 	}
@@ -73,7 +59,7 @@ void main(){
 
 			fscanf(f1,"%s\t%s\t%s",label,opcode,oprnd);
 		}
-		fprintf(f4,"%s\t%s\t%s",label,opcode,oprnd);
+		fprintf(f4,"\t\t%s\t%s",opcode,ad);
 
 		rewind(f1);
 		rewind(f2);

@@ -4,12 +4,12 @@ use expt6;
 create table branch(
 branch_id int PRIMARY KEY,
 branch_name varchar(30),
-branch_city varchar(10));
+branch_city varchar(30));
 
 create table customer(
 cust_id int PRIMARY KEY,
 cust_name varchar(30),
-cust_city varchar(10));
+cust_city varchar(30));
 
 create table savings(
 cust_id int,
@@ -98,9 +98,67 @@ create view AllLoan as
 SELECT *
 FROM (branch NATURAL JOIN customer) NATURAL JOIN loan;
 
-create view AllAcc as
-SELECT AllSaving
+create view AllAcc(branch_id,cust_id,branch_name,branch_city,cust_name,cust_city,accno,balance) as
+SELECT *
+FROM AllSaving
 UNION
-SELECT AllLoan;
+SELECT *
+FROM AllLoan;
+
+\! echo '------------AllSaving view-------------'
+SELECT *
+FROM AllSaving;
+\! echo '------------AllLoan view-------------'
+SELECT *
+FROM AllLoan;
+\! echo '------------AllAcc view-------------'
+SELECT *
+FROM AllAcc;
 
 
+\! echo '------------Query 1-------------'
+SELECT cust_id,cust_name,cust_city,branch_city
+FROM AllAcc
+WHERE branch_city=cust_city;
+
+
+\! echo '------------Query 2-------------'
+SELECT cust_id,cust_name
+FROM AllAcc
+WHERE branch_city="Kottayam";
+
+
+\! echo '------------Query 3-------------'
+SELECT cust_id,cust_name
+FROM AllAcc
+GROUP BY cust_id,cust_name
+HAVING count(*)>1;
+
+
+\! echo '------------Query 4(i)-------------'
+SELECT cust_id,cust_name
+FROM AllLoan 
+WHERE  cust_id NOT IN(		SELECT cust_id
+				FROM AllSaving);
+
+
+\! echo '------------Query 4(ii)-------------'
+SELECT cust_id,cust_name
+FROM  AllSaving
+WHERE  cust_id NOT IN(		SELECT cust_id
+				FROM AllLoan );
+				
+        
+\! echo '------------Query 4(iii)-------------'						
+SELECT L.cust_id,L.cust_name
+FROM  AllSaving as S,AllLoan as L
+WHERE L.cust_id=S.cust_id;
+
+drop view AllAcc;
+drop view AllLoan;
+drop view AllSaving;
+drop table loan;
+drop table savings;
+drop table customer;
+drop table branch;
+drop database expt6;

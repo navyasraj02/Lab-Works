@@ -70,7 +70,7 @@ PRIMARY KEY(stud_id,title)
 /*POPULATING THE DATABASE*/
 INSERT INTO student VALUES(100,"ALLEN THOMAS",1,"KTE20CS01","24 STRETFORDEND",2024,2020,"CSE","VIPIN VASU"),
 (101,"SANDRA SABU",2,"KTE20CS02","54 STRETFORDEND MANCHESTER",2024,2020,"CSE","VIPIN VASU"),
-(102,"MUKIL M P",3,"KTE20CS03","65 STRETFORDEND MANCHESTER",2022,2018,"CSE","VIPIN VASU"),
+(102,"MUKIL M P",3,"KTE20CS03","65 STRETFORDEND MANCHESTER",2021,2017,"CSE","VIPIN VASU"),
 (201,"NAVEENA",1,"KTE20ME01","44 STRETFORDEND MANCHESTER",2024,2020,"ME","SABINA MA"),
 (202,"JOSMY",2,"KTE20ME02","87 STRETFORDEND MANCHESTER",2024,2020,"ME","SABINA MA"),
 (501,"ANNIE",1,"KTE20CSM01","37 STRETFORDEND MANCHESTER",2023,2019,"CSE","VIDYA N"),
@@ -93,8 +93,8 @@ INSERT INTO qualification VALUES (100,10,"DISTINCTION"),
 (102,8,"SECONDCLASS"),
 (201,7,"SECONDCLASS"),
 (202,9,"FIRSTCLASS"),
-(501,10,"DISTINCTION"),
-(502,10,"DISTINCTION");
+(501,9,"FIRSTCLASS"),
+(502,9,"FIRSTCLASS");
 
 INSERT INTO project VALUES(101,"FACE RECOGNITION",1001,"ML",1),
 (102,"ATTENDNCE APP",1002,"WEB",2),
@@ -123,15 +123,18 @@ branch for each year.*/
 
 SELECT stud_name,roll_no,stud_address
 FROM student
-WHERE branch="CSE"
+WHERE branch="CSE" AND passout_yr<=YEAR(CURDATE())
 ORDER BY passout_yr;
+
 
 /*QUERY 2 : The names and roll nos of the students who completed the course for each year of pass out and
 for each branch.*/
 
 SELECT stud_name,roll_no,branch,passout_yr
 FROM student
+WHERE passout_yr<=YEAR(CURDATE())
 ORDER BY branch,passout_yr;
+
 
 /* QUERY 3 : The details of projects under taken by the students of a particular branch.*/
 
@@ -139,35 +142,36 @@ SELECT *
 FROM project NATURAL JOIN student
 WHERE branch="CSE";
 
+
 /*QUERY 4 : The name of the faculty who guided more than a specified no. of projects in each academic year. */
 
 SELECT fac_id,fac_name,admn_yr,count(*) as no_of_projects
 FROM faculty JOIN Stud_project ON fac_id = guide
-WHERE (fac_id,admn_yr) IN (SELECT guide,admn_yr
-                            FROM Stud_project
-                            )
-GROUP BY guide
+GROUP BY guide,admn_yr
 HAVING count(*) >1
 ORDER BY admn_yr;
+
 
 /*QUERY 5 : The branch with highest academic performance, chosen for each academic year.*/
 
 SELECT branch,passout_yr,avg(total)
 FROM student NATURAL JOIN qualification
 GROUP BY branch,passout_yr
-HAVING avg(total) > ALL (    SELECT avg(total)
+HAVING avg(total) >= ALL (   SELECT avg(total),passout_yr
                             FROM student NATURAL JOIN qualification
                             GROUP BY branch,passout_yr)
 ORDER BY passout_yr asc;
 
+
 /*QUERY 6 : The details of the students who secured the highest total for each branch and for each academic
 year.*/
 
-SELECT *
+SELECT stud_name,branch,passout_yr,total
 FROM student NATURAL JOIN qualification
-GROUP BY branch,passout_yr
-HAVING max(total)
+WHERE total >= ALL (	SELECT total
+			FROM student NATURAL JOIN qualification)
 ORDER BY passout_yr;
+
 
 /*QUERY 7 : The list of students who secured a given grade, for a given academic year.*/
 
@@ -175,11 +179,13 @@ SELECT stud_id,stud_name
 FROM Stud_qual
 WHERE grade="DISTINCTION" AND passout_yr=2024;
 
+
 /*QUERY 8 : The list of projects undertaken in each department together with the project guide name and
 emailid, for each academic year under a given core area.*/
 
-SELECT distinct stud_id,title,branch,guide,fac_emailId,core_area,passout_yr
+SELECT distinct stud_id,title,branch,guide,fac_emailId,core_area,admn_yr
 FROM Stud_project JOIN facDetails ON guide=fac_id;
+
 
 /*QUERY 9 : The number of total grades for each branch of study and for each year of admission.*/
 
@@ -187,11 +193,13 @@ SELECT admn_yr,branch,count(distinct grade) as no_of_grades
 FROM Stud_qual
 GROUP BY admn_yr,branch;
 
+
 /*QUERY 10 : The details of students in each branch admitted in a specified academic year.*/
 
 SELECT stud_id,stud_name,roll_no,utyreg_no,stud_address,passout_yr,admn_yr,branch,cls_adv
 FROM student
 WHERE admn_yr=2020;
+
 
 /*QUERY 11 : The details of the students, sorted on the basis of year of admission and branch of study.*/
 
@@ -199,12 +207,14 @@ SELECT *
 FROM student
 ORDER BY admn_yr,branch;
 
+
 /*QUERY 12 : The best mark, worst mark and the avg mark for each branch for a given academic year.*/
 
 SELECT max(total) as best_mark,min(total) as worst_mark,avg(total) as avg_mark,branch,passout_yr
 FROM Stud_qual
 WHERE passout_yr=2024
 GROUP BY branch,passout_yr;
+
 
 /*DROPPING THE VIEWS,TABLES AND DATABASE*/
 drop table project;

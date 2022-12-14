@@ -154,12 +154,19 @@ ORDER BY admn_yr;
 
 /*QUERY 5 : The branch with highest academic performance, chosen for each academic year.*/
 
-SELECT branch,passout_yr,avg(total)
-FROM student NATURAL JOIN qualification
+CREATE VIEW max_total_yr AS
+SELECT passout_yr,max(average) as max
+FROM (	SELECT avg(total) as average,branch,passout_yr
+	FROM Stud_qual
+	GROUP BY branch,passout_yr) as S
+GROUP BY passout_yr; 
+
+
+SELECT branch,passout_yr,avg(total) as average
+FROM Stud_qual
 GROUP BY branch,passout_yr
-HAVING avg(total) >= ALL (   SELECT avg(total),passout_yr
-                            FROM student NATURAL JOIN qualification
-                            GROUP BY branch,passout_yr)
+HAVING (avg(total),passout_yr) IN (   SELECT max,passout_yr
+                            FROM max_total_yr)
 ORDER BY passout_yr asc;
 
 

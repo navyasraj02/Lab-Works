@@ -2,47 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-int search_symtab(char *label)
-{
-    FILE *fptr = fopen("symtab.txt", "r");
-    if (fptr == NULL)
-    {
-        printf("no such file.");
-        return 0;
-    }
-    char temp1[100], temp2[100];
-    while (fscanf(fptr, "%s %s", temp1, temp2) == 2)
-    {
-        if (strcmp(temp1, label) == 0)
-        {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-int search_optab(char *opcode)
-{
-    FILE *fptr = fopen("optab.txt", "r");
-    char temp1[100], temp2[1000];
-
-    if (fptr == NULL)
-    {
-        printf("no such file.");
-        return 0;
-    }
-
-    fscanf(fptr, "%s %s", temp1, temp2);
-
-    while (fscanf(fptr, "%s %s", temp1, temp2) == 2)
-    {
-        if (strcmp(temp1, opcode) == 0)
-        {
-            return 1;
-        }
-    }
-    return 0;
-}
 void main()
 {
     char add1[50];

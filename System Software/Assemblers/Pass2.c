@@ -2,44 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-void strreverse(char *begin, char *end)
-{
-    char aux;
-    while (end > begin)
-    {
-        aux = *end, *end-- = *begin, *begin++ = aux;
-    }
-}
-void itoa1(int value, char *str, int base)
-{
-    static char num[] = "0123456789abcdefghijklmnopqrstuvwxyz";
-    char *wstr = str;
-    int sign;
-    div_t res;
-
-    if (base < 2 || base > 35)
-    {
-        *wstr = '\0';
-        return;
-    }
-
-    if ((sign = value) < 0)
-    {
-        value = -value;
-    }
-
-    do
-    {
-        res = div(value, base);
-        *wstr++ = num[res.rem];
-    } while (value = res.quot);
-    if (sign < 0)
-        *wstr++ = '-';
-    *wstr = '\0';
-
-    strreverse(str, wstr - 1);
-}
-
 int search_symtab(char *label)
 {
     FILE *fptr = fopen("symtab.txt", "r");
@@ -114,7 +76,7 @@ void main()
             act_len = len - 3;
             for (i = 2; i < (act_len + 2); i++)
             {
-                itoa1(oprnd[i], ad, 16);
+                itoa(oprnd[i], ad, 16);
                 fprintf(fp1, "%06s", ad);
             }
             fprintf(fp1, "\n");
@@ -122,7 +84,7 @@ void main()
         else if (strcmp(opcode, "WORD") == 0)
         {
             len = strlen(oprnd);
-            itoa1(atoi(oprnd), a, 10);
+            itoa(atoi(oprnd), a, 10);
             fprintf(fp6, "%06s\n", a);
             fprintf(fp1, "%d\t%s\t%s\t%s\t%06s\n", address, label, opcode, oprnd, a);
             fprintf(fp5, "%06s", a);

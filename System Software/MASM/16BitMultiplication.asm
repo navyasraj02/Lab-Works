@@ -1,0 +1,16 @@
+ASSUME CS:CODE
+CODE SEGMENT
+START:
+      MOV SI,7071H
+      MOV AX,[SI]
+      ADD SI,02H
+      MOV BX,[SI]
+      MUL BX
+
+      ADD SI,02H
+      MOV [SI],AX
+      ADD SI,02H
+      MOV [SI],DX
+      INT 3
+CODE  ENDS
+END START

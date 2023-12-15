@@ -1,4 +1,4 @@
 # Lab works
-This repository consists of laboratory works done as part of academic curriculum.
+This repository consists of laboratory work done as part of the academic curriculum (KTU).
 
-OS | DBMS | System Software
+OS | DBMS | System Software | Network | Compiler

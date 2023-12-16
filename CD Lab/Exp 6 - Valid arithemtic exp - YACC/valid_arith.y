@@ -8,7 +8,7 @@ int yyerror();
 %left '+' '-'
 %left '*' '/'
 %%
-e: e '+' e | e '-' e | e '*' e | e '/' e | '('e')' | NUM | ID
+e: e '+' e | e '-' e | e '*' e | e '/' e | '('e')' | NUM | ID;
 %%
 
 int main(){

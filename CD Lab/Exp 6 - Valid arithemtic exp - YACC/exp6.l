@@ -1,15 +1,14 @@
 %option noyywrap
 %{
-#include "valid_arith.tab.h"
-int yyerror();
+        #include<stdio.h>
+        #include "y.tab.h"
+        int yyerror();
 %}
-
 %%
-[0-9]+(\.[0-9]+)? { return NUM; }
-[a-zA-Z_][_a-zA-Z0-9]* { return ID; }
+[a-zA-Z_][a-zA-Z0-9_]* {return ID;}
+[0-9]+(\.[0-9]+)? {return NUM;}
 [\t] ;
-\n return 0;
-[-+*/()] return yytext[0];
-. { yyerror(); }
-
+[-+*/()] {return yytext[0];}
+\n {return 0;}
+. {yyerror();}
 %%

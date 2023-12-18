@@ -1,4 +1,4 @@
-#include<stdio.h>                                                                                                                                                                                                                        prgm.c                                                                                                                                                                                                                                           #include<stdio.h>
+                                                                                                                                                                                                                                                                                                                                                                                                                         #include<stdio.h>
 #include<string.h>
 int k=0,z=0,i=0,j=0,c=0;
 char a[16],ac[20],stk[15],act[10];
